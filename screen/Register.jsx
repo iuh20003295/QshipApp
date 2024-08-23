@@ -51,15 +51,17 @@
 
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { Picker } from '@react-native-picker/picker'; // Correct import
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const RegisterScreen = () => {
-  const [selectedPurpose, setSelectedPurpose] = useState("chon"); // State to manage selected value
-
-  const handlePurposeChange = (itemValue) => {
-    setSelectedPurpose(itemValue);
-    // Add any additional logic here, such as validation or state updates
-  };
+  const [open, setOpen] = useState(false);
+  const [selectedPurpose, setSelectedPurpose] = useState(null); // State to manage selected value
+  const [items, setItems] = useState([
+    { label: 'Chọn', value: 'chon' },
+    { label: 'Không thường xuyên', value: 'Không thường xuyên' },
+    { label: 'Dưới 100 đơn/tháng', value: 'Dưới 100 đơn/tháng' },
+    { label: 'Trên 100 đơn/tháng', value: 'Trên 100 đơn/tháng' }
+  ]);
 
   return (
     <View style={styles.container}>
@@ -70,17 +72,19 @@ const RegisterScreen = () => {
       <TextInput placeholder="Password" style={styles.input} secureTextEntry={true} />
       <TextInput placeholder="ConfirmPassword" style={styles.input} secureTextEntry={true} />
 
-      <TextInput style={styles.label}>Purpose of Use</TextInput>
-      <Picker
-        selectedValue={selectedPurpose} // Bind selected value to state
-        style={styles.picker}
-        onValueChange={handlePurposeChange} // Use a handler function to update state and handle other actions
-      >
-        <Picker.Item label="Chọn" value="chon" />
-        <Picker.Item label="Không thường xuyên" value="Không thường xuyên" />
-        <Picker.Item label="Dưới 100 đơn/tháng" value="Dưới 100 đơn/tháng" />
-        <Picker.Item label="Trên 100 đơn/tháng" value="Trên 100 đơn/tháng" />
-      </Picker>
+      <Text style={styles.label}>Purpose of Use</Text>
+      <DropDownPicker
+        open={open}
+        value={selectedPurpose}
+        items={items}
+        setOpen={setOpen}
+        setValue={setSelectedPurpose}
+        setItems={setItems}
+        style={styles.dropdown}
+        placeholder="Select an option"
+        zIndex={5000}
+        zIndexInverse={1000}
+      />
 
       <TextInput placeholder="ShipScale" style={styles.input} />
       <TextInput placeholder="ProductTypes" style={styles.input} />
@@ -113,8 +117,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
   },
-  picker: {
-    height: 50,
+  dropdown: {
     marginBottom: 10,
   },
 });
